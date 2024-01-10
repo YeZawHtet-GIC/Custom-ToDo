@@ -15,14 +15,13 @@ class CustomTodoController extends Controller
 
     public function create(Request $request)
     {
-        $showAllData = CustomTodo::all();
         $custom_todo = new CustomTodo;
         $custom_todo->title = $request->title;
         $custom_todo->description = $request->description;
         $custom_todo->importantlv = $request->importantlv;
         $custom_todo->status = $request->status;
         $custom_todo->save();
-        return redirect()->route('customs.index', compact('showAllData'));
+        return redirect()->route('customs.index');
     }
     public function store(Request $request)
     {
@@ -30,20 +29,18 @@ class CustomTodoController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator);
         }
-        $showAllData = CustomTodo::all();
         $custom_todo = new CustomTodo;
         $custom_todo->title = $request->title;
         $custom_todo->description = $request->description;
         $custom_todo->importantlv = $request->importantlv;
         $custom_todo->status = $request->status;
         $custom_todo->save();
-        return redirect()->route('customs.index', compact('showAllData'));
+        return redirect()->route('customs.index');
     }
     public function show($id)
     {
-        $showAllData = CustomTodo::all();
         $showData = CustomTodo::find($id);
-        return view("customs.index", compact("showData", "showAllData"));
+        return view("customs.index", compact("showData"));
     }
     public function edit($id)
     {
@@ -57,25 +54,23 @@ class CustomTodoController extends Controller
         if ($validator->fails()) {
             return back()->withErrors($validator);
         }
-        $showAllData = CustomTodo::all();
         $custom_todo = CustomTodo::find($id);
         $custom_todo->title = $request->title;
         $custom_todo->description = $request->description;
         $custom_todo->importantlv = $request->importantlv;
         $custom_todo->status = $request->status;
         $custom_todo->save();
-        return redirect()->route("customs.index", compact("showAllData"));
+        return redirect()->route("customs.index");
     }
     public function destroy($id)
     {
-        $showAllData = CustomTodo::all();
         $custom_todo = CustomTodo::find($id);
         $custom_todo->delete();
-        return redirect()->route("customs.index", compact("showAllData"));
+        return redirect()->route("customs.index");
     }
     private function validateRequest($request)
     {
-        return $validator = validator($request->validate([
+        return validator($request->validate([
             'title' => 'required',
             'description' => 'required',
             'importantlv' => 'required',
