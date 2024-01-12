@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\CustomTodo;
 use Illuminate\Http\Request;
+use App\Http\Requests\StoreRequest;
+use App\Http\Requests\UpdateRequest;
 
 class CustomTodoController extends Controller
 {
@@ -23,12 +25,8 @@ class CustomTodoController extends Controller
         $custom_todo->save();
         return redirect()->route('customs.index');
     }
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $validator = $this->validateRequest($request);
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
         $custom_todo = new CustomTodo;
         $custom_todo->title = $request->title;
         $custom_todo->description = $request->description;
@@ -48,12 +46,8 @@ class CustomTodoController extends Controller
         $editData = CustomTodo::find($id);
         return view("customs.index", compact("editData", "showAllData"));
     }
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, $id)
     {
-        $validator = $this->validateRequest($request);
-        if ($validator->fails()) {
-            return back()->withErrors($validator);
-        }
         $custom_todo = CustomTodo::find($id);
         $custom_todo->title = $request->title;
         $custom_todo->description = $request->description;
@@ -67,14 +61,5 @@ class CustomTodoController extends Controller
         $custom_todo = CustomTodo::find($id);
         $custom_todo->delete();
         return redirect()->route("customs.index");
-    }
-    private function validateRequest($request)
-    {
-        return validator($request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'importantlv' => 'required',
-            'status' => 'required',
-        ]));
     }
 }
